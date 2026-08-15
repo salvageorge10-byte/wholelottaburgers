@@ -4,6 +4,24 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 
+<!-- Content-Security-Policy: 'unsafe-inline' en style-src es por el <noscript><style>
+     de más abajo (fallback sin JS) — no hay ningún otro estilo ni script inline en
+     el sitio, y no hay ningún formulario ni input de usuario que un XSS pudiera
+     explotar igual. Ver README → Seguridad para el detalle de cada origen permitido. -->
+<meta http-equiv="Content-Security-Policy" content="
+  default-src 'self';
+  script-src 'self';
+  style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+  font-src 'self' https://fonts.gstatic.com;
+  img-src 'self' data:;
+  frame-src https://maps.google.com https://www.google.com;
+  connect-src 'self';
+  base-uri 'self';
+  form-action 'self';
+  object-src 'none';
+">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+
 <title>Whole Lotta Burgers — El rock hecho burger premium | La Plata</title>
 <meta name="description" content="Hamburguesas artesanales en Plaza Italia 61, La Plata. Medallones de blend propio, pan brioche de The Bread Box y cerveza artesanal Baum. Delivery y take away, todos los días.">
 <meta name="theme-color" content="#0A0908">
@@ -32,7 +50,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preload" as="image" href="assets/local-tall.webp" media="(max-width:899px)" fetchpriority="high">
 <link rel="preload" as="image" href="assets/local.webp" imagesrcset="assets/local-sm.webp 700w, assets/local.webp 795w" imagesizes="100vw" media="(min-width:900px)" fetchpriority="high">
-<link href="https://fonts.googleapis.com/css2?family=Anton&family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,500&family=Barlow+Condensed:wght@400;600;700&family=Barlow:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/styles.css">
 <noscript><style>.rv{opacity:1!important;transform:none!important}.menu-panel[hidden]{display:block!important}</style></noscript>
 
@@ -390,7 +408,7 @@
         <iframe
           src="https://maps.google.com/maps?q=Whole+Lotta+Burgers,+Plaza+Italia+61,+La+Plata,+Buenos+Aires&output=embed"
           title="Ubicación de Whole Lotta Burgers en el mapa"
-          loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+          loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>
       </div>
     </div>
 

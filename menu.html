@@ -4,6 +4,21 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 
+<!-- Content-Security-Policy: mismo criterio que index.html — ver README → Seguridad. -->
+<meta http-equiv="Content-Security-Policy" content="
+  default-src 'self';
+  script-src 'self';
+  style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+  font-src 'self' https://fonts.gstatic.com;
+  img-src 'self' data:;
+  frame-src https://maps.google.com https://www.google.com;
+  connect-src 'self';
+  base-uri 'self';
+  form-action 'self';
+  object-src 'none';
+">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+
 <title>Menú completo — Whole Lotta Burgers | La Plata</title>
 <meta name="description" content="La carta completa de Whole Lotta Burgers: burgers, minutas, cerveza artesanal Baum y postres. Fotos grandes, precios claros y pedido directo desde acá.">
 <meta name="theme-color" content="#0A0908">
@@ -28,7 +43,7 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Anton&family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,500&family=Barlow+Condensed:wght@400;600;700&family=Barlow:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/styles.css">
 <noscript><style>.rv{opacity:1!important;transform:none!important}.menu-panel[hidden]{display:block!important}</style></noscript>
 </head>

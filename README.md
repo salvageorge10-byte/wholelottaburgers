@@ -155,6 +155,64 @@ hero se calcula solo con la constante `RANGES` de `js/main.js`, en horario de Ar
   fallar, no se lleva puestas a las demás
 - Sin frameworks, sin cookies, sin trackers
 
+---
+
+## Rendimiento
+
+**Fuentes: se pedían pesos que no se usaban, y se usaban pesos que no se pedían.**
+Auditando con el navegador real (no leyendo el CSS a ojo — eso no contempla la herencia)
+qué peso y estilo terminaba renderizando cada letra del sitio, aparecieron dos problemas:
+
+- El título del hero (`Whole Lotta Burgers`, la letra Anton) estaba en **negrita falsa**.
+  Anton solo existe en un peso; el `<h1>` no declaraba `font-weight` propio, así que heredaba
+  el "bold" por defecto del navegador para los títulos, y como no hay un archivo real en ese
+  peso, el navegador la infla a mano (se nota, sobre todo a un tamaño de hasta 8.4rem). Se
+  arregló declarando `font-weight:400` explícito — cero costo, y ahora se ve la fuente real.
+- Fraunces (peso 400) y Barlow Condensed (peso 400) se usaban en varios lugares (el precio de
+  Moby Dick, los nombres de los canales de pedido, el pie de página) sin que ese peso estuviera
+  pedido a Google Fonts — mismo problema, sustitución silenciosa.
+- A la vez, tres pesos que sí se pedían no los usaba nadie: Fraunces 500 (derecho — la itálica
+  500 sí se usa), Barlow Condensed 500 y Barlow 600.
+
+Se corrigió la lista de pesos en el `<link>` de Google Fonts de las dos páginas para que
+coincida exactamente con lo que el sitio realmente usa — mismo número de archivos que antes
+(uno menos, de hecho), pero sin ningún peso mal sustituido.
+
+**Ya estaba resuelto de antes** (se deja documentado acá): `preconnect` a los dos dominios de
+Google Fonts, `font-display:swap` para que el texto no quede invisible mientras carga la
+fuente, `preload` de la foto del hero con `fetchpriority="high"`, imágenes en WebP con
+`width`/`height` fijos para no generar saltos de layout, y lazy loading en todo lo que no es
+above-the-fold.
+
+---
+
+## Seguridad
+
+- **Content-Security-Policy** (meta tag, en las dos páginas): solo permite scripts propios
+  (`script-src 'self'`, nada de scripts externos ni inline), estilos propios más el CSS de
+  Google Fonts, imágenes propias, y el iframe del mapa apuntando únicamente a los dominios
+  reales de Google Maps. `style-src` incluye `'unsafe-inline'` únicamente por el
+  `<noscript><style>` de respaldo (para cuando el JS está desactivado) — no hay ningún otro
+  estilo inline en el sitio, y al no haber formularios ni datos de usuario en ningún lado, no
+  hay dónde inyectar algo que ese permiso pudiera explotar.
+- **`Referrer-Policy: strict-origin-when-cross-origin`**, vía meta tag y en el propio iframe
+  del mapa: al navegar a un sitio externo (Instagram, PedidosYa, Google Maps) solo se manda el
+  dominio de origen, no la URL completa.
+- **Todos los enlaces `target="_blank"` llevan `rel="noopener"`** (30 en total entre las dos
+  páginas) — evita que la pestaña que se abre pueda controlar la pestaña de origen.
+- **Archivo `_headers`** en la raíz (formato que leen Netlify y Cloudflare Pages de forma
+  nativa): agrega `X-Frame-Options`, `X-Content-Type-Options`, `Permissions-Policy` y una
+  versión más estricta del CSP con `frame-ancestors` — cabeceras que un `<meta>` no puede
+  setear porque el navegador las ignora ahí, solo valen como header HTTP real.
+  **Ojo si el hosting final es GitHub Pages: ese archivo no hace nada ahí** (GitHub Pages no
+  lee `_headers`, no tiene forma de configurar cabeceras custom). En ese caso las únicas
+  protecciones activas son las del meta tag de arriba. Si en algún momento se muda el sitio a
+  Netlify, Cloudflare Pages o Vercel, `_headers` se activa solo, sin tocar nada más.
+- El sitio no tiene formularios, no pide datos, no usa cookies ni `localStorage` ni conexiones
+  a APIs externas — la superficie de ataque ya era chica de por sí antes de este cambio.
+
+---
+
 ## Tipografías y color
 
 | | |

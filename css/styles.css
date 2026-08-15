@@ -410,6 +410,10 @@ body::after{
 .hero-h1{
   animation:none;
   font-family:var(--f-hero);
+  /* Anton solo existe en un peso. Sin esto, el <h1> hereda "bold" del navegador
+     y como no hay una fuente real en ese peso, el navegador infla el trazo a
+     mano (negrita sintética) — se nota, sobre todo a este tamaño. */
+  font-weight:400;
   font-size:clamp(3.3rem,16.5vw,8.4rem);
   line-height:.86;letter-spacing:-.008em;
   text-transform:uppercase;
